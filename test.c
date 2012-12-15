@@ -4,24 +4,34 @@
 
 #include "mroutine.h"
 
+int test_fun2(struct mroutine_t *mr)
+{
+    int i = 257;
+    mr_yield(mr, i);
+    return 258;
+}
+
 void test_fun(struct mroutine_t *mr, int a)
 {
-    a = mr_yield(mr, a + 1);
+    mid_t mid = mr_create(mr, test_fun2);
+    int i = 0;
+    while (i++ < 100)
+    {
+        mr_resume(mr, mid, NULL);
+        a = mr_yield(mr, a + 1);
+    }
 }
 
 void test(struct mroutine_t *mr, int num)
 {
     int a = 1;
-    int b = 100;
     mid_t a_mid = mr_create(mr, test_fun);
-    mid_t b_mid = mr_create(mr, test_fun);
     
     int i = 0;
     void *ret = NULL;
     while (i++ < num)
     {
         ret = mr_resume(mr, a_mid, a++);
-        ret = mr_resume(mr, b_mid, b++);
     }
 }
 

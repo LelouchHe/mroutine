@@ -85,8 +85,8 @@ struct mroutine_t *mr_ini(int coroutine_num, int stack_size)
 
     if (coroutine_num <= DEF_COROUTINE_NUM)
         coroutine_num = DEF_COROUTINE_NUM;
-    mr->cr_num = coroutine_num;
-    mr->cr_max = 2 * mr->cr_num;
+    mr->cr_num = 0;
+    mr->cr_max = 2 * coroutine_num;
     mr->crs = (struct coroutine_t **)malloc(mr->cr_max * sizeof (struct coroutine_t *));
     if (mr->crs == NULL)
     {
@@ -145,7 +145,7 @@ mid_t mr_create(struct mroutine_t *mr, mr_fun_t fun)
     {
         int check_num;
         int i;
-        for (i = 0, check_num = 0; i < mr->cr_max && check_num < mr->cr_num; i++)
+        for (i = 0, check_num = 0; i < mr->cr_max && check_num <= mr->cr_num; i++)
         {
             if (mr->crs[i] == NULL)
             {
