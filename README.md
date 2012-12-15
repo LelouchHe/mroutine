@@ -1,5 +1,5 @@
 # Intro
 
-I just want to write coroutine lib for fun
+I just want to write a simple coroutine lib in C for fun
 
-see more in [my blog](http://lelouchhe.github.com/mcoutine/)
+see more in [my blog](http://lelouchhe.github.com/mroutine/)
