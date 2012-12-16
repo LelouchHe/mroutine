@@ -1,4 +1,5 @@
 *.o
 *.a
 *.swp
-test
+test_*
+!test_*.c

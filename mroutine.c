@@ -2,9 +2,9 @@
 #include <string.h>
 #include <stdint.h>
 #include <sys/mman.h>
-#include <ucontext.h>
 
 #include "mroutine.h"
+#include "mcontext.h"
 
 #define DEF_STACK_SIZE (1024 * 1024)
 #define MIN_STACK_SIZE (4 * 1024)
@@ -18,9 +18,9 @@ struct coroutine_t
 
     int status;
 
-    ucontext_t prev;
+    struct mcontext_t prev;
     mid_t prev_mid;
-    ucontext_t cur;
+    struct mcontext_t cur;
 
     char *stack;
     int stack_size;
@@ -180,10 +180,8 @@ void *mr_resume(struct mroutine_t *mr, mid_t mid, void *args)
     switch (cr->status)
     {
     case MR_READY:
-        getcontext(&cr->cur);
-        cr->cur.uc_stack.ss_sp = cr->stack;
-        cr->cur.uc_stack.ss_size = cr->stack_size;
-        cr->cur.uc_link = &cr->prev;
+        mc_get(&cr->cur);
+        mc_fill(&cr->cur, cr->stack, cr->stack_size, &cr->prev);
 
         cr->args = args;
         cr->status = MR_RUNNING;
@@ -192,8 +190,8 @@ void *mr_resume(struct mroutine_t *mr, mid_t mid, void *args)
         mr->cr_mid = mid;
 
         uintptr_t ptr= (uintptr_t)mr;
-        makecontext(&cr->cur, (void (*)(void))fun_wrap, 2, (uint32_t)ptr, (uint32_t)(ptr>>32));
-        swapcontext(&cr->prev, &cr->cur);
+        mc_make(&cr->cur, (void (*)(void))fun_wrap, (uint32_t)ptr, (uint32_t)(ptr>>32));
+        mc_swap(&cr->prev, &cr->cur);
 
         ret = cr->ret;
         mr->cr_mid = cr->prev_mid;
@@ -213,7 +211,7 @@ void *mr_resume(struct mroutine_t *mr, mid_t mid, void *args)
         cr->prev_mid = mr->cr_mid;
         mr->cr_mid = mid;
 
-        swapcontext(&cr->prev, &cr->cur);
+        mc_swap(&cr->prev, &cr->cur);
 
         ret = cr->ret;
         mr->cr_mid = cr->prev_mid;
@@ -232,7 +230,7 @@ void *mr_yield(struct mroutine_t *mr, void *ret)
     cr->status = MR_SUSPEND;
     cr->ret = ret;
     mr->cr_mid = cr->prev_mid;
-    swapcontext(&cr->cur, &cr->prev);
+    mc_swap(&cr->cur, &cr->prev);
 
     return cr->args;
 }
