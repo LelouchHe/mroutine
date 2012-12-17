@@ -2,4 +2,5 @@
 *.a
 *.swp
 test_*
+test/
 !test_*.c
