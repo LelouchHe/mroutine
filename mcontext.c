@@ -132,9 +132,6 @@ static inline void mc_swap_asm(mc_regs from, mc_regs to)
 
 #endif // arch
 
-#endif // MC_USE_ASM
-
-
 void mc_get(struct mcontext_t *mc)
 {}
 
@@ -152,4 +149,4 @@ void mc_swap(struct mcontext_t *omc, struct mcontext_t *mc)
 void mc_make(struct mcontext_t *mc, void (*fun)(), uint32_t low, uint32_t high)
 {}
 
-#endif
+#endif // MC_USE_ASM

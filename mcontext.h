@@ -24,6 +24,7 @@ struct mcontext_t
 struct mcontext_t
 {
     void *regs[8];
+    struct mcontext_t *link; // 结束后返回的context
 };
 
 #elif defined(__i386) || defined(__i386__) // x86
@@ -34,6 +35,7 @@ struct mcontext_t
 struct mcontext_t
 {
     void *regs[4];
+    struct mcontext_t *link; // 结束后返回的context
 };
 
 #else // PIC
@@ -42,6 +44,7 @@ struct mcontext_t
 struct mcontext_t
 {
     void *regs[3];
+    struct mcontext_t *link; // 结束后返回的context
 };
 
 #endif // PIC
