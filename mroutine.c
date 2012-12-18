@@ -10,6 +10,11 @@
 #define MIN_STACK_SIZE (4 * 1024)
 #define DEF_COROUTINE_NUM (32)
 
+// 兼容性
+#ifndef MAP_STACK
+#define MAP_STACK 0x2000
+#endif
+
 struct coroutine_t
 {
     mr_fun_t fun;
