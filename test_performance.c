@@ -38,8 +38,8 @@ int main(int argc, char *argv[])
     test(mr, num);
     gettimeofday(&end, NULL);
 
-    printf("num: %d\ncost: %d(us)\n", num,
-            (end.tv_sec - start.tv_sec) * 1000000 + (end.tv_usec - start.tv_usec));
+    printf("num: %d\n", num);
+    printf("cost: %d(us)\n", (end.tv_sec - start.tv_sec) * 1000000 + (end.tv_usec - start.tv_usec));
     
     mr_fini(mr);
 
