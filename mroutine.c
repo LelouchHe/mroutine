@@ -12,7 +12,7 @@
 
 // 兼容性
 #ifndef MAP_STACK
-#define MAP_STACK 0x2000
+#define MAP_STACK 0x20000
 #endif
 
 struct coroutine_t
